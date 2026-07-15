@@ -1,0 +1,153 @@
+{
+  "note": "See README.md in this folder — this is a good-faith structured summary, not a verbatim platform export. Replace/supplement with an actual export from claude.ai for full assignment compliance.",
+  "assistant": "Claude (Anthropic)",
+  "turns": [
+    {
+      "role": "user",
+      "content_summary": "Uploaded the full Practical Assignment brief (Autocomplete Form Requirements, FR-01 through FR-05, test environment details, 6-task practical exercise, submission structure) and instructed: \"Complete this assignment as mentioned\".",
+      "full_prompt_file": "prompts/prompt-00-original-assignment-brief.md"
+    },
+    {
+      "role": "assistant",
+      "content_summary": "Scaffolded a git-repo-style directory structure (docs/, tests/ui, tests/api, mock-server/, prompts/, transcript/) matching the assignment's required submission structure.",
+      "actions": ["created directory tree"]
+    },
+    {
+      "role": "assistant",
+      "content_summary": "Built a local reference mock server (Express) and front-end (HTML/JS) implementing the documented HTML structure and FR-01 through FR-05, including a config endpoint to toggle prefix-match vs match-anywhere filtering, and dedicated malformed-response endpoints for negative API testing.",
+      "actions": [
+        "created mock-server/server.js",
+        "created mock-server/public/index.html",
+        "created mock-server/public/app.js"
+      ]
+    },
+    {
+      "role": "assistant",
+      "content_summary": "Set up package.json and playwright.config.js with separate 'ui' and 'api' projects, and a webServer block to auto-start the mock app for test runs.",
+      "actions": ["created package.json", "created playwright.config.js"]
+    },
+    {
+      "role": "assistant",
+      "content_summary": "Wrote the Page Object Model (AutocompleteFormPage.js) and the UI test spec covering Tab Navigation, Keyboard Interaction, Suggestion Filtering, Suggestion Selection, and Form Submission.",
+      "actions": [
+        "created tests/ui/pages/AutocompleteFormPage.js",
+        "created tests/ui/tests/autocomplete-form.spec.js",
+        "created tests/ui/config/environment.js"
+      ]
+    },
+    {
+      "role": "assistant",
+      "content_summary": "Wrote the FR-05 JSON Schema and the API test suite (Ajv-based schema validation, data type checks, BCP 47 locale check, suggestion_list correctness, 2+ negative cases against simulated malformed responses).",
+      "actions": [
+        "created tests/api/schemas/response-schema.json",
+        "created tests/api/tests/response-contract.spec.js"
+      ]
+    },
+    {
+      "role": "assistant",
+      "content_summary": "Installed dependencies via npm (registry.npmjs.org was reachable). Attempted 'npx playwright install chromium' — failed because the sandbox's network egress allowlist blocks cdn.playwright.dev, so the UI suite's browser binary could not be downloaded in this environment.",
+      "actions": ["npm install", "npx playwright install chromium (failed: host not in allowlist)"]
+    },
+    {
+      "role": "assistant",
+      "content_summary": "Ran the API suite against the mock server. Two tests failed on first run. Diagnosed and fixed both: (1) a hardcoded future start_date that could be later than the server's real 'now' end_date, replaced with a relative timestamp; (2) a test asserting anywhere-mode suggestion_list behavior using an invalid partial-text submission that the server correctly rejected with 400, rewritten to use a valid full-suggestion submission. Re-ran: 11/11 passed.",
+      "actions": [
+        "npx playwright test --project=api (2 failed / 9 passed)",
+        "str_replace fixes to tests/api/tests/response-contract.spec.js",
+        "npx playwright test --project=api (11/11 passed)"
+      ]
+    },
+    {
+      "role": "assistant",
+      "content_summary": "Sanity-checked the mock server directly via curl (config, suggestions, submission endpoints) to confirm behavior independent of the test framework.",
+      "actions": ["curl checks against localhost:4173"]
+    },
+    {
+      "role": "assistant",
+      "content_summary": "Wrote all documentation deliverables: requirement analysis (with explicit stated assumptions), top-10 risk-ranked test scenarios, FR-05 defect/discrepancy identification against the sample response, 12 detailed test cases, AI usage reflection (tools/areas/modifications/limitations, using the two real bugs found above as concrete modification examples), and an architecture discussion.",
+      "actions": [
+        "created docs/1-requirement-analysis.md",
+        "created docs/2-test-scenarios.md",
+        "created docs/3-defect-identification.md",
+        "created docs/4-test-cases.md",
+        "created docs/7-ai-reflection.md",
+        "created docs/8-architecture-discussion.md"
+      ]
+    },
+    {
+      "role": "assistant",
+      "content_summary": "Wrote the top-level README with setup/run instructions, and saved the original assignment brief plus a prompt-usage note into prompts/, and a transcript note plus this file into transcript/.",
+      "actions": [
+        "created README.md",
+        "created prompts/prompt-00-original-assignment-brief.md",
+        "created prompts/prompt-01-assignment-brief.md",
+        "created transcript/README.md",
+        "created transcript/conversation.json"
+      ]
+    },
+    {
+      "role": "assistant",
+      "content_summary": "Packaged the full repository as a zip file and presented it as the final deliverable.",
+      "actions": ["zip archive created", "present_files"]
+    },
+    {
+      "role": "user",
+      "content_summary": "Requested a senior QA review of the completed repository: re-examine the suggestion_list defect finding for over-claiming, tighten the timestamp explanation, add an Additional Quality Considerations section (accessibility/performance) to requirement analysis, add one more negative API test, review the UI suite for duplicated locators/manual assertions, expand the README and architecture discussion, rewrite the AI reflection to show iterative/critical use rather than one-shot generation, and provide a summary of every file changed with rationale.",
+      "actions": []
+    },
+    {
+      "role": "assistant",
+      "content_summary": "Reclassified the suggestion_list finding in 3-defect-identification.md from a confirmed Critical defect to an explicitly-labeled ambiguity, with the FR-02/FR-04 reasoning spelled out and a concrete follow-up check identified; updated the corresponding cross-references in 1-requirement-analysis.md and 2-test-scenarios.md to match. Rewrote the start_date/end_date explanation to state plainly that the values are valid ISO-8601 timestamps expressed in the wrong timezone (UTC instead of IST), rather than a vaguer 'local time' framing.",
+      "actions": [
+        "str_replace edits to docs/3-defect-identification.md",
+        "str_replace edits to docs/1-requirement-analysis.md",
+        "str_replace edits to docs/2-test-scenarios.md"
+      ]
+    },
+    {
+      "role": "assistant",
+      "content_summary": "Added an 'Additional Quality Considerations' section to the requirement analysis covering accessibility (keyboard-only navigation, focus visibility, label association, screen-reader compatibility) and performance (filtering latency, submission latency, suggestion-list scalability).",
+      "actions": ["str_replace edit to docs/1-requirement-analysis.md"]
+    },
+    {
+      "role": "assistant",
+      "content_summary": "Added a dedicated malformed-timestamp endpoint to the mock server and a matching negative API test asserting Ajv's date-time format check catches it; added the corresponding TC-13 to the test-cases doc. Re-ran the API suite: 12/12 passed.",
+      "actions": [
+        "str_replace edit to mock-server/server.js",
+        "str_replace edit to tests/api/tests/response-contract.spec.js",
+        "str_replace edit to docs/4-test-cases.md",
+        "npx playwright test --project=api (12/12 passed)"
+      ]
+    },
+    {
+      "role": "assistant",
+      "content_summary": "Reviewed the UI suite for duplicated locators and manual assertions. Standardized several ad hoc .length comparisons to Playwright's toHaveLength() for consistency, tightened one assertion from a loose toBeLessThan(3) to an exact toHaveLength(2) since the exact expected count was already known, and replaced a deprecated .type() call with .pressSequentially(). Confirmed the Page Object Model itself needed no changes and contains no assertions.",
+      "actions": [
+        "str_replace edits to tests/ui/tests/autocomplete-form.spec.js",
+        "node -c syntax checks"
+      ]
+    },
+    {
+      "role": "assistant",
+      "content_summary": "Restructured the README into explicit Prerequisites, Installation, Running the Mock Server, Running UI Tests, Running API Tests, Running Everything, Assumptions, and Limitations sections; updated test-case and test-count references throughout. Expanded the architecture discussion's mock-server rationale to explicitly state the assignment's URL is illustrative/placeholder rather than an accessible environment.",
+      "actions": [
+        "str_replace edits to README.md",
+        "str_replace edit to docs/8-architecture-discussion.md"
+      ]
+    },
+    {
+      "role": "assistant",
+      "content_summary": "Rewrote the AI Reflection to demonstrate iterative, critical use rather than one-shot acceptance: added the suggestion_list over-claiming as a concrete 'Modifications Made' example, added a note about generic first-draft risk scenarios being rewritten for specificity, and added a second AI Limitations example (over-confident defect classification) alongside the original test-suite limitation.",
+      "actions": ["str_replace edits to docs/7-ai-reflection.md"]
+    },
+    {
+      "role": "assistant",
+      "content_summary": "Re-ran the full API suite and syntax-checked all modified JavaScript files to confirm no regressions, then re-packaged the repository as a zip file for delivery, along with a summary of every changed file and the rationale for each change.",
+      "actions": [
+        "npx playwright test --project=api (final verification)",
+        "zip archive created",
+        "present_files"
+      ]
+    }
+  ]
+}
